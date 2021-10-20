@@ -18,7 +18,7 @@ const Posts = () => {
   return (
     <section className="text-gray-400 bg-gray-900 body-font">
       <div className="container px-5 py-24 mx-auto">
-        <div className="p-2 w-1/4 mb-6">
+        <div className="lg:w-1/4 md:w-1/2 sm:w-full mb-6">
           <div className="relative">
             <label htmlFor="name" className="leading-7 text-sm text-gray-400">
               Search for title
