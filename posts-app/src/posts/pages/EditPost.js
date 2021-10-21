@@ -1,14 +1,31 @@
 import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 const EditPost = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const dispatch = useDispatch();
 
   const postId = useParams().postId;
   const history = useHistory();
 
-  const editPostHandler = async () => {
+  const post = useSelector(
+    (state) => state.posts.filter((post) => post.id == postId)[0]
+  );
+
+  const [title, setTitle] = useState(post === undefined ? "" : post.title);
+  const [body, setBody] = useState(post === undefined ? "" : post.body);
+
+  const editPostHandler = () => {
+    dispatch({
+      type: "edit",
+      payload: {
+        post: {
+          ...post,
+          title,
+          body,
+        },
+      },
+    });
     history.push("/");
   };
 
@@ -37,6 +54,7 @@ const EditPost = () => {
                 <input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
+                  disabled={post === undefined}
                   type="text"
                   id="name"
                   name="name"
@@ -53,8 +71,9 @@ const EditPost = () => {
                   Description
                 </label>
                 <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  disabled={post === undefined}
                   id="message"
                   name="message"
                   className="w-full bg-gray-800 bg-opacity-40 rounded border border-gray-700 focus:border-indigo-500 focus:bg-gray-900 focus:ring-2 focus:ring-indigo-900 h-32 text-base outline-none text-gray-100 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"
