@@ -45,9 +45,13 @@ app.get("/posts", async (req, res, next) => {
 
   res.json({
     posts: posts.map((post) => {
-      return { ...post, likes: Math.floor(Math.random() * (100 - 5 + 1) + 5) };
+      return {
+        ...post,
+        likes: Math.floor(Math.random() * (100 - 5 + 1) + 5), //Adds a random number of likes for each post
+        isLikedByUser: false, //Since there's no auth or user logic in the app this manages if each post has been liked by the user or not, so that the icon can update
+      };
     }),
-  }); //Adds a random number of likes for each post
+  });
 });
 
 app.use((req, res, next) => {

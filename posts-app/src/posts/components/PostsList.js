@@ -3,14 +3,14 @@ import { useSelector } from "react-redux";
 
 import PostItem from "./PostItem";
 
-const PostsList = () => {
-  const posts = useSelector((state) => state.posts);
-  console.log(posts);
-
+const PostsList = (props) => {
   return (
     <>
-      {posts && posts.map((post) => <PostItem post={post} key={post.id} />)}
-      {!posts && <h2 onClick={() => console.log(posts)}>Loading...</h2>}
+      {props.posts &&
+        props.posts.map((post) => <PostItem post={post} key={post.id} />)}
+      {!props.posts && (
+        <h2 onClick={() => console.log(props.posts)}>Loading...</h2>
+      )}
     </>
   );
 };
