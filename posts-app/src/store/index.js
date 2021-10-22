@@ -4,7 +4,7 @@ import { watchAPIcall } from "./saga";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const initialState = { posts: [], searchedPosts: [], error: null };
+const initialState = { posts: [], searchedPosts: [] };
 
 const postsReducer = (state = initialState, action) => {
   if (action.type === "fetch") {
@@ -18,6 +18,13 @@ const postsReducer = (state = initialState, action) => {
       ...state,
       posts: action.response,
       searchedPosts: action.response,
+    };
+  }
+
+  if (action.type === "fetchFailed") {
+    //Error handling here
+    return {
+      ...state,
     };
   }
 
@@ -38,6 +45,13 @@ const postsReducer = (state = initialState, action) => {
       ...state,
       posts: postsCopy.sort((a, b) => a.id - b.id),
       searchedPosts: postsCopy.sort((a, b) => a.id - b.id),
+    };
+  }
+
+  if (action.type === "editFailed") {
+    //Error handling here
+    return {
+      ...state,
     };
   }
 
