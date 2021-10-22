@@ -1,18 +1,11 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import PostItem from "./PostItem";
 
 const PostsList = () => {
-  const dispatch = useDispatch();
-
   const posts = useSelector((state) => state.posts);
-
   console.log(posts);
-
-  if (posts?.length === 0 || posts === undefined) {
-    dispatch({ type: "fetch" });
-  }
 
   return (
     <>

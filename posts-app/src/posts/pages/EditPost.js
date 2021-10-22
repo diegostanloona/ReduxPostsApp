@@ -9,7 +9,7 @@ const EditPost = () => {
   const history = useHistory();
 
   const post = useSelector(
-    (state) => state.posts.filter((post) => post.id == postId)[0]
+    (state) => state.posts.filter((post) => post.id + "" === postId)[0]
   );
 
   const [title, setTitle] = useState(post === undefined ? "" : post.title);
