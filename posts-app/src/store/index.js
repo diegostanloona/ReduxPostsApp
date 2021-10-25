@@ -62,10 +62,15 @@ const postsReducer = (state = initialState, action) => {
       ...state.posts.filter((post) => post.id !== likedPost.id),
       likedPost,
     ];
+
+    const searchedPostsCopy = [
+      ...state.searchedPosts.filter((post) => post.id !== likedPost.id),
+      likedPost,
+    ];
     return {
       ...state,
       posts: postsCopy.sort((a, b) => a.id - b.id),
-      searchedPosts: postsCopy.sort((a, b) => a.id - b.id),
+      searchedPosts: searchedPostsCopy.sort((a, b) => a.id - b.id),
     };
   }
 
@@ -76,6 +81,7 @@ const postsReducer = (state = initialState, action) => {
         post.title.toUpperCase().includes(keyword)
       ),
     ];
+
     return {
       ...state,
       searchedPosts: postsCopy,

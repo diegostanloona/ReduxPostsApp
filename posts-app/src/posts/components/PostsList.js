@@ -8,9 +8,7 @@ const PostsList = (props) => {
     <>
       {props.posts &&
         props.posts.map((post) => <PostItem post={post} key={post.id} />)}
-      {!props.posts && (
-        <h2 onClick={() => console.log(props.posts)}>Loading...</h2>
-      )}
+      {!props.posts && <h2>Loading...</h2>}
     </>
   );
 };
