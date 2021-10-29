@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { editPost } from "../../store/slices/postsReducer";
 
 const EditPost = () => {
   const dispatch = useDispatch();
@@ -9,23 +10,23 @@ const EditPost = () => {
   const history = useHistory();
 
   const post = useSelector(
-    (state) => state.posts.filter((post) => post.id + "" === postId)[0]
+    (state) =>
+      state.postsReducer.posts.filter((post) => post.id + "" === postId)[0] //Normally it would make a request to the backend asking for that single post.
   );
 
   const [title, setTitle] = useState(post === undefined ? "" : post.title);
   const [body, setBody] = useState(post === undefined ? "" : post.body);
 
   const editPostHandler = () => {
-    dispatch({
-      type: "edit",
-      payload: {
+    dispatch(
+      editPost({
         post: {
           ...post,
           title,
           body,
         },
-      },
-    });
+      })
+    );
     history.push("/");
   };
 

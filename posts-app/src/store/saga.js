@@ -1,42 +1,54 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
+import {
+  fetchPosts,
+  fetchPostsSucceeded,
+  fetchPostsFailed,
+  editPost,
+  editPostSucceeded,
+  editPostFailed,
+} from "./slices/postsReducer";
 
-function* fetchPosts() {
+export const fetchPostsFromAPI = async () => {
+  const response = await fetch("http://localhost:5000/posts");
+  const result = await response.json();
+  console.log(result.posts);
+  return result.posts;
+};
+
+function* fetchPostsSaga() {
   try {
-    const response = yield call(
-      () =>
-        fetch("http://localhost:5000/posts")
-          .then((response) => response.json())
-          .catch((error) => {
-            console.log(error);
-          }),
-      {}
-    );
+    const posts = yield call(fetchPostsFromAPI);
 
-    yield put({ type: "fetchSucceeded", response: response.posts });
+    yield put(fetchPostsSucceeded({ response: posts }));
   } catch (error) {
-    yield put({ type: "fetchFailed", error });
+    yield put(fetchPostsFailed({ error: error }));
   }
 }
 
-function* editPost(action) {
+export const editPostToAPI = async (post) => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts/1", {
+    method: "PUT",
+    body: JSON.stringify({
+      id: post.id,
+      title: post.title,
+      body: post.body,
+      userId: post.userId,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  const result = await response.json();
+  return result;
+};
+
+function* editPostSaga(action) {
   const post = action.payload.post;
   try {
-    const response = yield call(
-      () =>
-        fetch("https://jsonplaceholder.typicode.com/posts/1", {
-          method: "PUT",
-          body: JSON.stringify({
-            id: post.id,
-            title: post.title,
-            body: post.body,
-            userId: post.userId,
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }).then((response) => response.json()),
-      {}
-    );
+    const res = yield call(() => editPostToAPI(post));
+
+    console.log(res);
+    console.log(post);
 
     const editedPost = {
       ...post,
@@ -44,13 +56,13 @@ function* editPost(action) {
       isLikedByUser: post.isLikedByUser, //likes and isLikedByUser are here because the API does not return them.
     };
 
-    yield put({ type: "editSucceeded", editedPost: editedPost });
+    yield put(editPostSucceeded({ editedPost: editedPost }));
   } catch (error) {
-    yield put({ type: "editFailed", error });
+    yield put(editPostFailed({ error: error }));
   }
 }
 
 export function* watchAPIcall() {
-  yield takeLatest("fetch", fetchPosts);
-  yield takeLatest("edit", editPost);
+  yield takeLatest(fetchPosts, fetchPostsSaga);
+  yield takeLatest(editPost, editPostSaga);
 }

@@ -1,22 +1,22 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { likePost } from "../../store/slices/postsReducer";
 
 const PostItem = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const likePostHandler = () => {
-    dispatch({
-      type: "likePost",
-      payload: {
+    dispatch(
+      likePost({
         post: {
           ...props.post,
           likes: props.post.likes + (props.post.isLikedByUser ? -1 : 1),
           isLikedByUser: !props.post.isLikedByUser,
         },
-      },
-    });
+      })
+    );
   };
 
   return (

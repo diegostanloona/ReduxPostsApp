@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PostsList from "../components/PostsList";
 import { useSelector, useDispatch } from "react-redux";
+import { searchPosts } from "../../store/slices/postsReducer";
 
 const Posts = () => {
   const [keyword, setKeyword] = useState("");
 
   const dispatch = useDispatch();
-  const searchedPosts = useSelector((state) => state.searchedPosts);
+  const searchedPosts = useSelector((state) => {
+    return state.postsReducer.searchedPosts;
+  });
 
   let typingTimer; //timer identifier
   const doneTypingInterval = 1000;
@@ -16,12 +19,7 @@ const Posts = () => {
     clearTimeout(typingTimer);
     setKeyword(e.target.value);
     typingTimer = setTimeout(() => {
-      dispatch({
-        type: "search",
-        payload: {
-          keyword: e.target.value,
-        },
-      });
+      dispatch(searchPosts({ keyword: e.target.value }));
     }, doneTypingInterval);
   };
 

@@ -11,6 +11,7 @@ import Posts from "./posts/pages/Posts";
 import EditPost from "./posts/pages/EditPost";
 
 import "./index.css";
+import { fetchPosts } from "./store/slices/postsReducer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const App = () => {
   const posts = useSelector((state) => state.posts);
 
   if (posts?.length === 0 || posts === undefined) {
-    dispatch({ type: "fetch" });
+    dispatch(fetchPosts());
   }
 
   let routes = (
