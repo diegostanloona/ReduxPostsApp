@@ -7,6 +7,7 @@ import {
   editPostSucceeded,
   editPostFailed,
 } from "./slices/postsReducer";
+import regeneratorRuntime from "regenerator-runtime";
 
 export const fetchPostsFromAPI = async () => {
   const response = await fetch("http://localhost:5000/posts");
@@ -15,7 +16,7 @@ export const fetchPostsFromAPI = async () => {
   return result.posts;
 };
 
-function* fetchPostsSaga() {
+export function* fetchPostsSaga() {
   try {
     const posts = yield call(fetchPostsFromAPI);
 
@@ -42,22 +43,21 @@ export const editPostToAPI = async (post) => {
   return result;
 };
 
-function* editPostSaga(action) {
+export function* editPostSaga(action) {
   const post = action.payload.post;
   try {
-    const res = yield call(() => editPostToAPI(post));
-
-    console.log(res);
-    console.log(post);
+    const res = yield call(editPostToAPI, post);
 
     const editedPost = {
-      ...post,
+      ...res,
+      id: post.id,
       likes: post.likes,
       isLikedByUser: post.isLikedByUser, //likes and isLikedByUser are here because the API does not return them.
     };
 
     yield put(editPostSucceeded({ editedPost: editedPost }));
   } catch (error) {
+    console.log(error);
     yield put(editPostFailed({ error: error }));
   }
 }
